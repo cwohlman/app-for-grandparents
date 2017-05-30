@@ -1,1 +1,3 @@
 node_modules/
+imports/client/secrets.js
+imports/server/secrets.js
