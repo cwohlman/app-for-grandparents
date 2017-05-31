@@ -19,6 +19,9 @@ class Grandkid extends Component {
   updateName(name) {
     grandkids.update(this.props.kid._id, { $set: { name: name } });
   }
+  updateBirthday(birthdate) {
+    grandkids.update(this.props.kid._id, { $set: { birthdate: birthdate } });
+  }
   render() {
     if (this.props.kid == null) {
       return (
@@ -38,6 +41,9 @@ class Grandkid extends Component {
           }
           <p>Click to upload a photo</p>
         </div>
+        <p>
+          Birthday: <ClickToEdit onChange={this.updateBirthday.bind(this)} value={this.props.kid.birthdate} />
+        </p>
       </div>
     )
   }
