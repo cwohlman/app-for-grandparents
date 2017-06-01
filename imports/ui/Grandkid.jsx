@@ -5,9 +5,10 @@ import grandkids from '../collections/grandkids.js';
 import {
   Link
 } from 'react-router-dom'
-import {Image} from 'cloudinary-react';
+import { Image, Transformation } from 'cloudinary-react';
 import ClickToEdit from './ClickToEdit.jsx';
 import { cloudinary_config } from '../client/secrets.js';
+import styles from './styles/theme.js'
 
 class Grandkid extends Component {
   uploadPhoto() {
@@ -22,6 +23,9 @@ class Grandkid extends Component {
   updateBirthday(birthdate) {
     grandkids.update(this.props.kid._id, { $set: { birthdate: birthdate } });
   }
+  updateNotes(notes) {
+    grandkids.update(this.props.kid._id, { $set: { notes: notes } });
+  }
   render() {
     if (this.props.kid == null) {
       return (
@@ -32,17 +36,25 @@ class Grandkid extends Component {
     }
     return (
       <div>
-        <h1><ClickToEdit onChange={this.updateName.bind(this)} value={this.props.kid.name} /></h1>
-        <div onClick={this.uploadPhoto.bind(this)}>
+        <h1 className={styles("Grandkid > Heading")}><ClickToEdit onChange={this.updateName.bind(this)} value={this.props.kid.name} /></h1>
+        <div className={styles("Grandkid > PhotoContainer")}>
           {
             typeof this.props.kid.photo == "string" ?
-            (<Image cloudName="grandkids" publicId={this.props.kid.photo} width="300" crop="scale"/>) :
+            (
+              <Image className={styles("Grandkid > Photo")} cloudName="grandkids" publicId={this.props.kid.photo} />
+            ) :
             ''
           }
-          <p>Click to upload a photo</p>
+          <p
+            className={typeof this.props.kid.photo == "string" ? styles("Grandkid > UploadButton") : styles("Grandkid > UploadContainer")}
+            onClick={this.uploadPhoto.bind(this)}
+            >Click to upload {typeof this.props.kid.photo == "string" ? "" : "new"} photo</p>
         </div>
         <p>
           Birthday: <ClickToEdit onChange={this.updateBirthday.bind(this)} value={this.props.kid.birthdate} />
+        </p>
+        <p>
+          Notes: <ClickToEdit onChange={this.updateNotes.bind(this)} value={this.props.kid.notes} type="textarea"/>
         </p>
       </div>
     )

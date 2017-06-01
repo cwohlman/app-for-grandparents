@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import styles from './styles/theme.js'
 
 export default class ClickToEdit extends Component {
   constructor(props) {
@@ -24,16 +25,32 @@ export default class ClickToEdit extends Component {
     this.setState({ editing: false });
   }
   render() {
-    if (this.state.editing == true) {
-      return (<input
-        type="text"
-        value={this.state.value || ""}
-        onChange={this.updateValue.bind(this)}
-        onBlur={this.stopEditing.bind(this)}
-        autoFocus
-        onFocus={(e) => e.target.select()}
-        ref={(input) => { this.input = input; }}  />)
+    if (this.props.type == "textarea") {
+      if (this.state.editing == true) {
+        return (<textarea
+          className={styles("Textarea")}
+          type="text"
+          value={this.state.value || ""}
+          onChange={this.updateValue.bind(this)}
+          onBlur={this.stopEditing.bind(this)}
+          autoFocus
+          onFocus={(e) => e.target.select()}
+          ref={(input) => { this.input = input; }}  />)
+      }
+      return (<pre onClick={this.startEditing.bind(this)}>{this.props.value || "Click to Edit"}</pre>);
+    } else {
+      if (this.state.editing == true) {
+        return (<input
+          type="text"
+          value={this.state.value || ""}
+          onChange={this.updateValue.bind(this)}
+          onBlur={this.stopEditing.bind(this)}
+          autoFocus
+          onFocus={(e) => e.target.select()}
+          ref={(input) => { this.input = input; }}  />)
+      }
+      return (<span onClick={this.startEditing.bind(this)}>{this.props.value || "Click to Edit"}</span>);
     }
-    return (<span onClick={this.startEditing.bind(this)}>{this.props.value || "Click to Edit"}</span>);
+
   }
 };

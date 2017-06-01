@@ -3,7 +3,7 @@ import { createContainer } from 'meteor/react-meteor-data';
 import React, { Component } from 'react';
 import moment from 'moment';
 import grandkids from '../collections/grandkids.js';
-import {Image} from 'cloudinary-react';
+import { Image, Transformation } from 'cloudinary-react';
 
 import {
   Link,
@@ -11,11 +11,13 @@ import {
 } from 'react-router-dom'
 import history from 'history';
 
+import styles from './styles/theme.js'
+
 class Grandkids extends Component {
   render() {
     return (
-      <div>
-        <h1>Grandkids</h1>
+      <div className={styles("Grandkids")}>
+        <h1 className={styles("Grandkids > Heading")}>All Your Grandkids</h1>
         {
           this.props.grandkids.map((grandkid) => (
             <Child key={grandkid._id} kid={grandkid} />
@@ -104,25 +106,31 @@ class Child extends Component {
   }
   render() {
     return (
-      <div>
-        <Link to={"/grandkid/" + this.props.kid._id}>
-          <p>{this.props.kid.name}</p>
-          {
-            typeof this.props.kid.photo == "string" ?
-            (<Image cloudName="grandkids" publicId={this.props.kid.photo} width="300" crop="scale"/>) :
-            ''
-          }
-          {
-            this.hasUpcomingBirthday(this.props.kid) ?
-            (<p>Birthday coming up: {this.formattedBirthday(this.props.kid)}!</p>) :
-            ''
-          }
-          {
-            this.hasRecentBirthday(this.props.kid) ?
-            (<p>Birthday was: {this.formattedBirthday(this.props.kid)}!</p>) :
-            ''
-          }
-        </Link>
+      <div className={styles("Grandkids > Child")}>
+        <Link className={styles("Grandkids > Child > Link")} to={"/grandkid/" + this.props.kid._id}>
+          <div className={styles("Grandkids > Child > Card")}>
+            <p className={styles("Grandkids > Child > Name")}>{this.props.kid.name}</p>
+            {
+              typeof this.props.kid.photo == "string" ?
+              (
+                <Image cloudName="grandkids" publicId={this.props.kid.photo}>
+                  <Transformation width="320" height="320" gravity="face" crop="fill" />
+                </Image>
+              ) :
+              ''
+            }
+            {
+              this.hasUpcomingBirthday(this.props.kid) ?
+              (<p className={styles("Grandkids > Child > Birthday")}>Birthday coming up: {this.formattedBirthday(this.props.kid)}!</p>) :
+              ''
+            }
+            {
+              this.hasRecentBirthday(this.props.kid) ?
+              (<p className={styles("Grandkids > Child > Birthday")}>Birthday was: {this.formattedBirthday(this.props.kid)}!</p>) :
+              ''
+            }
+        </div>
+      </Link>
       </div>
     );
   }
